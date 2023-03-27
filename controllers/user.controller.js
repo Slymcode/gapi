@@ -98,6 +98,7 @@ exports.createAndLoginUser = async ( req, res ) =>
 
 exports.updateUserProfile = async ( req, res ) => 
 {
+    const domain = req.get('origin');
     const address = req.body.address;
     const firstname = req.body.firstname;
     const lastname = req.body.lastname;
@@ -115,7 +116,7 @@ exports.updateUserProfile = async ( req, res ) =>
            message: '<!DOCTYPE html>'+
            '<html>'+
            '<body><div>'+
-           "Dear "+firstname + "! <br/><br/> We noticed that you signed up on our platform. Below is your email verification link. <br/> <a href=http://localhost:3000?verify="+ emailRecovery +">Click Here</a> to verify you email address."+
+           "Dear "+firstname + "! <br/><br/> We noticed that you signed up on our platform. Below is your email verification link. <br/> <a href= "+domain+"?verify="+ emailRecovery +">Click Here</a> to verify you email address."+
            '</div></body></html>'
         }
         await sendMail(params).then(async result => {
