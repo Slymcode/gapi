@@ -13,6 +13,7 @@ const config = require('../config/config')[process.env.NODE_ENV || 'development'
 
 exports.create = async  ( req, res ) => 
 {
+    const domain = req.get('origin');
     // Validate content
     if(!req.body.projectTitle){
         res.status(400).send({
@@ -75,14 +76,14 @@ exports.create = async  ( req, res ) =>
               })  
               console.log('DEBUGING: email')
               console.log(config.cor_origin)
-              const redirectLink = `${config.cor_origin}/space/projects/${spaceId}`
+              const redirectLink = `${domain}/space/project/${spaceId}/${data.id}`
               const spaceOwnerParams = {
                 email: spaceOwnerEmail,
                 subject: 'New Project Notification',
                 message: '<!DOCTYPE html>'+
                 '<html>'+
                 '<body><div>'+
-                "Hey "+spaceOwnerName + "! <br/><br/> You have a pending request to review a new project created in your space. Kindly <a href="+ redirectLink +">visit</a> your dashboard to give your approval . <br/>"+
+                "Hey "+spaceOwnerName + "! <br/><br/> You have a pending request to review a new project created in your space. Kindly <a href="+ domain +">visit</a> your dashboard to give your approval . <br/>"+
                 '</div></body></html>'
              }
              const projectOwnerParams = {
@@ -249,6 +250,7 @@ exports.isProjectAdmin = async(req, res) =>
 }
 
 exports.setProjectStatus = async (req, res) => { 
+    const domain = req.get('origin');
     const sid = req.body.sid;
     const pid = req.body.pid;
     const statusNote = req.body.statusNote ? req.body.statusNote : null;
